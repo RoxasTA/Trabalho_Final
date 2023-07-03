@@ -1,0 +1,135 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+typedef struct {
+    int codigo;
+    char descricao[100];
+    int quantidade;
+    float valor;
+} Produto;
+
+#define MAX_PRODUTOS 100
+
+Produto estoque[MAX_PRODUTOS];
+int totalProdutos = 0;
+
+void inicializarEstoque() {
+    totalProdutos = 0;
+}
+
+void cadastrarProduto() {
+    if (totalProdutos >= MAX_PRODUTOS) {
+        printf("Estoque cheio. Impossível cadastrar novos produtos.\n");
+        return;
+    }
+
+    Produto novoProduto;
+
+    printf("Digite o código do produto: ");
+    scanf("%d", &novoProduto.codigo);
+
+    printf("Digite a descrição do produto: ");
+    scanf(" %[^\n]s", novoProduto.descricao);
+
+    printf("Digite a quantidade do produto: ");
+    scanf("%d", &novoProduto.quantidade);
+
+    printf("Digite o valor do produto: ");
+    scanf("%f", &novoProduto.valor);
+
+    estoque[totalProdutos] = novoProduto;
+    totalProdutos++;
+
+    printf("Produto cadastrado com sucesso.\n");
+}
+
+void gerarRelatorio() {
+    printf("Relatório de Produtos:\n");
+
+    for (int i = 0; i < totalProdutos; i++) {
+        printf("Código: %d\n", estoque[i].codigo);
+        printf("Descrição: %s\n", estoque[i].descricao);
+        printf("Quantidade: %d\n", estoque[i].quantidade);
+        printf("Valor: R$ %.2f\n", estoque[i].valor);
+        printf("----------------------------\n");
+    }
+}
+
+void consultarProduto() {
+    int codigo;
+
+    printf("Digite o código do produto: ");
+    scanf("%d", &codigo);
+
+    for (int i = 0; i < totalProdutos; i++) {
+        if (estoque[i].codigo == codigo) {
+            printf("Código: %d\n", estoque[i].codigo);
+            printf("Descrição: %s\n", estoque[i].descricao);
+            printf("Quantidade: %d\n", estoque[i].quantidade);
+            printf("Valor: R$ %.2f\n", estoque[i].valor);
+            return;
+        }
+    }
+
+    printf("Produto não encontrado.\n");
+}
+
+void removerProduto() {
+    int codigo;
+
+    printf("Digite o código do produto a ser removido: ");
+    scanf("%d", &codigo);
+
+    for (int i = 0; i < totalProdutos; i++) {
+        if (estoque[i].codigo == codigo) {
+            for (int j = i; j < totalProdutos - 1; j++) {
+                estoque[j] = estoque[j + 1];
+            }
+            totalProdutos--;
+            printf("Produto removido do estoque.\n");
+            return;
+        }
+    }
+
+    printf("Produto não encontrado.\n");
+}
+
+int main() {
+    int opcao;
+
+    inicializarEstoque();
+
+    do {
+        printf("\nSistema de Controle de Estoque\n");
+        printf("1. Cadastrar Produto\n");
+        printf("2. Gerar Relatório de Produtos\n");
+        printf("3. Consultar Produto\n");
+        printf("4. Remover Produto\n");
+        printf("0. Sair\n");
+        printf("Digite sua opção: ");
+        scanf("%d", &opcao);
+
+        switch (opcao) {
+            case 1:
+                cadastrarProduto();
+                break;
+            case 2:
+                gerarRelatorio();
+                break;
+            case 3:
+                consultarProduto();
+                break;
+            case 4:
+                removerProduto();
+                break;
+            case 0:
+                printf("Saindo do programa...\n");
+                break;
+            default:
+                printf("Opção inválida. Por favor, tente novamente.\n");
+                break;
+        }
+    } while (opcao != 0);
+
+    return 0;
+}
